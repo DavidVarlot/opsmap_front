@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {addPoi } from './../actions/actions'
-import POI from './../model/poi';
+import { bindActionCreators } from 'redux'
+import * as actions from './../actions/actions'
+import POI from './../models/poi';
+import { TEST } from '../constants/MapActions';
+
 
 
 const mapStateToProps = (state:any) => {
@@ -10,36 +13,54 @@ const mapStateToProps = (state:any) => {
     }
 }
 
-
-const mapDispatchToProps = (dispatch:any) => {
-
-  }
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        test: () => {
+            dispatch(actions.test())
+        },
+        addPOI: (aPoi:POI) => {
+            dispatch(actions.addPoi(aPoi))
+        }
+    };
+}
 
 class FormEditWaypoint extends Component <any, any> {
 
     addPOI:any;
+    handleChangeLat: any;
+    handleChangeLon : any;
     
     constructor(props: any) {
         super(props);
 
+        this.state = {
+            lat: this.props.poi.lat,
+            lon: this.props.poi.lon
+          };
+
         this.addPOI = (event: any) => {
-            alert(this.props.poi.lat);
+            this.props.addPOI(new POI(undefined, undefined, this.state.lat, this.state.lon));
+        }
+
+        this.handleChangeLat = (event: any) => {
+            this.setState({lat: event.target.value});
+        }
+
+        this.handleChangeLon = (event: any) => {
+            this.setState({lon: event.target.value});
         }
         
     }
 
-    
-    
-
     render(){
         return (
             <div>
-                <span><label>Lat</label><input type="text" value={this.props.poi.lat} ></input></span>
-                <span><label>Lon</label><input type="text" value={this.props.poi.lon}></input></span>
+                <span><label>Lat</label><input type="text" value={this.state.lat} onChange={this.handleChangeLat}></input></span>
+                <span><label>Lon</label><input type="text" value={this.state.lon} onChange={this.handleChangeLon}></input></span>
                 <span><button onClick={this.addPOI }>OK</button></span>
             </div>
         );
     }
 }
 
-export default connect(mapStateToProps)(FormEditWaypoint)
+export default connect(mapStateToProps,mapDispatchToProps)(FormEditWaypoint)

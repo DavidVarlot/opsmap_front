@@ -1,7 +1,11 @@
 import * as mapActions from './../constants/MapActions';
+import POI from './../models/poi'
 
-export const addPoi = (lat : string, long : string) => ({
+export const addPoi = (aPoi : POI) => ({
     type : mapActions.ADD_POI,
-    lat,
-    long
+    payload : aPoi
+})
+
+export const test = () => ({
+    type : mapActions.TEST,
 })
